@@ -1,0 +1,11 @@
+---
+#URL for course materials
+course_url: "https://training.linuxfoundation.org/cm/LFS258/LFS258_V2021-09-20_SOLUTIONS.tar.xz"
+course_user:  "LFtraining" 
+course_password: "Penguin2014"
+
+  #Directory on k8s master host where config files are placed
+k8s_master_config_dir: "/root/k8s_master_conf"
+
+k8s_master_alias: "k8s-master"
+calico_ipv4_poop_cidr: "172.16.0.0/16"

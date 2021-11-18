@@ -1,0 +1,69 @@
+---
+
+- name: Add /etc/hosts entries
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ item }}"
+    create: yes
+  with_items:
+    - "{{ cluster_hosts }}"
+
+- name: Add K8s repository
+  ansible.builtin.copy:
+    src: kubernetes.list
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    
+  
+- name: Add K8s repository key
+  ansible.builtin.apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Install core packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ packages }}"
+
+- name: Copy docker daemon.json
+  ansible.builtin.copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    mode: '0600'
+  notify:
+    - Restart docker
+
+- name: Install k8s specific packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "{{ k8s_packages }}"
+
+- name: Prevent k8s specific packages from being upgraded
+  dpkg_selections:
+    name: "{{ item.split('=')[0] }}"
+    selection: hold
+  with_items:
+    - "{{ k8s_packages }}"
+
+- name: Disable swap (1/2)
+  ansible.builtin.shell:
+    cmd: swapoff -a
+
+- name: Disable swap in fstab (2/2)
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+
+- name: Enable bash completion
+  ansible.builtin.lineinfile:
+    path: /etc/bash.bashrc
+    line: source <(kubectl completion bash)
+    create: yes
+    
+  

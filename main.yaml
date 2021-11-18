@@ -1,0 +1,13 @@
+---
+
+- name: Prepare systems for k8s
+  hosts: all
+  roles:
+    - role: prepareOS
+      become: yes
+
+- name: Prepare control plane
+  hosts: k8s_master
+  roles:
+    - role: prepareCP
+      become: yes

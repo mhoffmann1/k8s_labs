@@ -1,0 +1,10 @@
+K8s-master  ansible_host=192.168.154.10 ansible_user=ubuntu
+K8s-slave01 ansible_host=192.168.154.11 ansible_user=ubuntu
+K8s-slave02 ansible_host=192.168.154.12 ansible_user=ubuntu
+
+[k8s_master]
+K8s-master  ansible_host=192.168.154.10 ansible_user=ubuntu
+
+[K8s_slave]
+K8s-slave01 ansible_host=192.168.154.11 ansible_user=ubuntu
+K8s-slave02 ansible_host=192.168.154.12 ansible_user=ubuntu

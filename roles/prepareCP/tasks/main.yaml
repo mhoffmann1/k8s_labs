@@ -1,0 +1,29 @@
+---
+- name: Create config directory
+  ansible.builtin.file:
+    path: "{{ k8s_master_config_dir }}"
+    state: directory
+
+- name: Pull course materials
+  ansible.builtin.get_url:
+    url: "{{ course_url }}"
+    url_username: "{{ course_user }}"
+    url_password: "{{ course_password }}"
+    dest: "{{ k8s_master_config_dir }}/."
+
+- name: Unarchive course materials
+  ansible.builtin.unarchive:
+    src: "{{ k8s_master_config_dir }}/{{ course_url | basename }}"
+    dest: "{{ k8s_master_config_dir }}"
+    remote_src: yes
+    
+
+- name: Push calico definition file
+  ansible.builtin.template:
+    src: calico.yaml.j2
+    dest: "{{ k8s_master_config_dir }}/calico.yaml"
+
+- name: Push kubeadm-config file
+  ansible.builtin.template:
+    src: kubeadm-config.yaml.j2
+    dest: "{{ k8s_master_config_dir }}/kubeadm-config.yaml" 

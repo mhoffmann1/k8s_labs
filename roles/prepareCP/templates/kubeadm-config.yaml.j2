@@ -1,0 +1,6 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: 1.21.1
+controlPlaneEndpoint: "{{ k8s_master_alias }}:6443"
+networking:
+  podSubnet: "{{ calico_ipv4_poop_cidr }}"
