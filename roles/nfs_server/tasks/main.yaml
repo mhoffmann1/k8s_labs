@@ -1,0 +1,28 @@
+- name: Install nfs_server
+  ansible.builtin.apt:
+    name: nfs-kernel-server
+    state: present
+    update_cache: yes
+
+- name: Create NFS shared directory
+  ansible.builtin.file:
+    path: /opt/sfw
+    state: directory
+    mode: '1777'
+
+- name: Add export entry
+  ansible.builtin.lineinfile:
+    path: /etc/exports
+    line: /opt/sfw/ *(rw,sync,no_root_squash,subtree_check)
+    state: present
+    create: yes
+
+- name: re-read exports file
+  ansible.builtin.command:
+    cmd: exportfs -ra
+
+- name: Copy example file
+  ansible.builtin.copy:
+    src: hello.txt
+    dest: /opt/sfw/hello.txt
+    mode: '0666'

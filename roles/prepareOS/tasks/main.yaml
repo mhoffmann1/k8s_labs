@@ -13,7 +13,6 @@
     src: kubernetes.list
     dest: /etc/apt/sources.list.d/kubernetes.list
     
-  
 - name: Add K8s repository key
   ansible.builtin.apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg

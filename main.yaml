@@ -11,3 +11,9 @@
   roles:
     - role: prepareCP
       become: yes
+
+- name: Install nfs_server
+  hosts: k8s_master
+  roles:
+    - role: nfs_server
+      become: yes
