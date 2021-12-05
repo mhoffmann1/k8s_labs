@@ -1,19 +1,27 @@
 ---
 
-- name: Prepare systems for k8s
-  hosts: all
-  roles:
-    - role: prepareOS
-      become: yes
-
-- name: Prepare control plane
-  hosts: k8s_master
-  roles:
-    - role: prepareCP
-      become: yes
+#- name: Prepare systems for k8s
+#  hosts: all
+#  roles:
+#    - role: prepareOS
+#      become: yes
+#
+#- name: Prepare control plane
+#  hosts: k8s_master
+#  roles:
+#    - role: prepareCP
+#      become: yes
 
 - name: Install nfs_server
   hosts: k8s_master
   roles:
     - role: nfs_server
       become: yes
+
+- name: Mount nfs_server resources
+  hosts: all
+  tasks:
+    - import_role: 
+        name: nfs_server
+        tasks_from: mount_volume.yaml
+  become: yes

@@ -1,0 +1,14 @@
+---
+- name: Make sure nfs-common is installed
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+    update_cache: yes
+
+- name: Mount NFS volumes 
+  ansible.posix.mount:
+    src: "{{ nfs_server}}:{{ nfs_server_path }}"
+    path: "{{ mount_path }}"
+    state: mounted
+    boot: yes
+    fstype: nfs
